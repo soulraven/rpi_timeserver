@@ -1,0 +1,91 @@
+---
+
+- name: Stop and disable the chrony service
+  service:
+    name: chrony
+    enabled: no
+    state: stopped
+  register: chonyd_service_register
+  ignore_errors: true
+
+- debug:
+    msg: "{{ chonyd_service_register.msg }}"
+  when: chonyd_service_register is failed
+
+- name: extract tarball
+  unarchive:
+    remote_src: True
+    src: "{{ ntp_url_path }}"
+    dest: "{{ ntp_build_dir }}"
+
+- name: Config build enviroment for {{ ntp_default_version }}
+  command: ./configure {{ ntp_configure_flags }}
+  args:
+    chdir: "{{ ntp_build_dir }}/{{ ntp_dist_name }}"
+  register: register_config 
+  changed_when: false
+
+- debug: msg="{{ register_config }}"
+  when: register_config is failed
+
+- name: Build new sources for {{ ntp_default_version }}
+  make:
+    chdir: "{{ ntp_build_dir }}/{{ ntp_dist_name }}"
+    params:
+      jobs: 5
+  register: register_make
+
+- debug: msg="{{ register_make }}"
+  when: register_make is failed
+
+- name: Make install for {{ ntp_default_version }}
+  make:
+    chdir: "{{ ntp_build_dir }}/{{ ntp_dist_name }}"
+    target: install
+  register: register_make_install
+
+- debug: msg="{{ register_make_install }}"
+  when: register_make_install is failed
+
+- name: Clean up build of {{ ntp_default_version }}
+  file:
+    state: absent
+    path: "{{ ntp_build_dir }}/{{ ntp_dist_name }}"
+  when: "ntp_cleanup_build"
+
+- name: Stop the existing NTP daemon
+  service:
+    name: ntp
+    state: stopped
+
+- name: Copy the new ntp daemon /usr/bin/
+  copy:
+    src: "/usr/local/bin/{{ item }}"
+    dest: /usr/bin/
+    remote_src: yes
+  with_items:
+    - ntpdc
+    - ntpq
+    - ntpsweep
+    - ntptrace
+
+- name: Copy the new ntp daemon /usr/sbin/
+  copy:
+    src: "/usr/local/sbin/{{ item }}"
+    dest: /usr/sbin/
+    remote_src: yes
+  with_items:
+    - ntpd
+    - ntpdate
+    - ntp-keygen
+    - ntptime
+    - ntp-wait
+
+- name: Deploy the basic config file
+  template:
+    src: etc/ntp.conf.j2
+    dest: /etc/ntp.conf
+    owner: root
+    group: root
+  notify:
+    - Restart NTP

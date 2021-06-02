@@ -1,0 +1,52 @@
+---
+
+- name: Stop and disable the ntp service
+  service:
+    name: ntp
+    enabled: no
+    state: stopped
+  register: ntp_service_register
+  ignore_errors: true
+
+- debug:
+    msg: "{{ ntpd_service_register.msg }}"
+  when: ntp_service_register is failed
+
+- name: Install Chrony required packages
+  package:
+    name: "{{ chrony__base_packages }}"
+    state: present
+  register: chrony__register_packages
+  until: chrony__register_packages is succeeded
+
+- name: Deploy new config to chrony
+  template:
+    src: etc/chrony/chrony.conf.j2
+    dest: /etc/chrony/chrony.conf
+    owner: root
+    group: root
+
+- name: Create config folder for chrony.d 
+  file:
+    path: "/etc/chrony/chrony.d"
+    state: directory
+    mode: '0755'
+
+- name: Deploy the config files
+  template:
+    src: "etc/chrony/chrony.d/{{ item }}"
+    dest: "/etc/chrony/chrony.d/{{ item }}"
+    owner: root
+    group: root
+  with_items:
+    - 00-global.conf
+    - 01-pools.conf
+    - 02-servers.conf
+    - 03-refclocks.conf
+    - 04-logging.conf
+    - 05-calibrate.conf
+    - 99-calibrate-offset.gps0
+    - chrony.tempcomp
+  notify:
+    - Restart Chrony
+    - Restart GPSD

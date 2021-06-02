@@ -1,0 +1,87 @@
+---
+# .. vim: foldmarker=[[[,]]]:foldmethod=marker
+
+# .. envvar:: ntp__base_packages [[[
+#
+# List of APT packages which are required by the NTP server.
+timeserver__base_packages:
+  - pps-tools
+  - gpsd
+  - gpsd-clients
+  - python-gps
+  - libcap-dev
+  - libssl-dev
+  - ntpstat
+  - git
+  - python3-pip
+  - python3-distutils-extra
+# ]]]
+
+# .. envvar:: base_packages [[[
+#
+# List of APT packages which are required by the NTP server.
+timeserver__packages: []
+# ]]]
+
+# .. envvar:: timeserver_default_server [[[
+#
+# Descriibe what server will be installed
+# options: chrony or ntpd
+timeserver_default_server: chrony
+# ]]]
+
+# .. envvar:: timeserver_telegraf_plugins [[[
+#
+# Enable the Telegraf plugin deploy for specific time server
+timeserver_telegraf_plugins: True
+# ]]]
+
+# .. envvar:: timeserver_telegraf_influxdb_host [[[
+#
+# Enable the Telegraf plugin deploy for specific time server
+timeserver_telegraf_influxdb_host: 127.0.0.1
+# ]]]
+
+# .. envvar:: timeserver_telegraf_influxdb_port [[[
+#
+# Enable the Telegraf plugin deploy for specific time server
+timeserver_telegraf_influxdb_port: 8086
+# ]]]
+
+# .. envvar:: timeserver_telegraf_influxdb_database [[[
+#
+# Enable the Telegraf plugin deploy for specific time server
+timeserver_telegraf_influxdb_database: ntp_server
+# ]]]
+
+# .. envvar:: timeserver_telegraf_influxdb_namepass [[[
+#
+timeserver_telegraf_influxdb_namepass:
+  - ntpq
+  - chrony
+# ]]]
+
+# .. envvar:: timeserver_rplcd_install [[[
+#
+# Enable the raspberry pi LCD
+timeserver_rplcd_install: True
+# ]]]
+
+# .. envvar:: timeserver_rplcd_git_repo [[[
+#
+# Github repository url for RasberryPI LCD
+timeserver_rplcd_git_repo: https://github.com/soulraven/rplcd_timeserver
+# ]]]
+
+# NTP server area configuration (leave empty for 'Worldwide').
+# See: http://support.ntp.org/bin/view/Servers/NTPPoolServers
+timeserver_area: 'ro'
+
+# .. envvar:: ntp_base_public_servers [[[
+# 
+timeserver_base_public_servers:
+  - "0{{ '.' + timeserver_area if timeserver_area else '' }}.pool.ntp.org iburst minpoll 4  maxpoll 4"
+  - "1{{ '.' + timeserver_area if timeserver_area else '' }}.pool.ntp.org iburst minpoll 4  maxpoll 4"
+  - "2{{ '.' + timeserver_area if timeserver_area else '' }}.pool.ntp.org iburst minpoll 4  maxpoll 4"
+  - "3{{ '.' + timeserver_area if timeserver_area else '' }}.pool.ntp.org iburst minpoll 4  maxpoll 4"
+# ]]]

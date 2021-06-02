@@ -1,0 +1,21 @@
+---
+
+- name: Restart Chrony
+  service:
+    name: chrony
+    state: restarted
+
+- name: Restart GPSD
+  service:
+    name: gpsd
+    state: restarted
+
+- name: Restart NTP
+  service:
+    name: ntp
+    state: restarted
+
+- name: Restart Telegraf
+  service:
+    name: telegraf
+    state: restarted

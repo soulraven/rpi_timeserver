@@ -1,0 +1,42 @@
+---
+
+- name: Include Telegraf input for ntpd daemon
+  template:
+    src: etc/telegraf/telegraf.d/input_ntpq.conf.j2
+    dest: /etc/telegraf/telegraf.d/input_ntpq.conf
+    owner: root
+    group: root
+  when: timeserver_default_server == 'ntpd'
+  notify:
+    - Restart Telegraf
+
+- name: Remove the chrony input plugin
+  file:
+    path: /etc/telegraf/telegraf.d/input_chrony.conf
+    state: absent
+  when: timeserver_default_server == 'ntpd'
+
+- name: Include Telegraf input for chrony daemon
+  template:
+    src: etc/telegraf/telegraf.d/input_chrony.conf.j2
+    dest: /etc/telegraf/telegraf.d/input_chrony.conf
+    owner: root
+    group: root
+  when: timeserver_default_server == 'chrony'
+  notify:
+    - Restart Telegraf
+
+- name: Remove the ntpq input plugin
+  file:
+    path: /etc/telegraf/telegraf.d/input_ntpq.conf
+    state: absent
+  when: timeserver_default_server == 'chrony'
+
+- name: Include Telegraf output influxdb plugin
+  template:
+    src: etc/telegraf/telegraf.d/outputs_influxdb.conf.j2
+    dest: /etc/telegraf/telegraf.d/outputs_influxdb.conf
+    owner: root
+    group: root
+  notify:
+    - Restart Telegraf

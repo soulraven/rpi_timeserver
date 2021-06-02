@@ -1,0 +1,87 @@
+---
+
+- name: Install required packages
+  package:
+    name: "{{ q('flattened', (timeserver__base_packages
+                              + timeserver__packages)) }}"
+    state: present
+  register: timeserver__register_packages
+  until: timeserver__register_packages is succeeded
+
+- name: Enable kernel support for GPS receiver pulse-per-second (PPS) input
+  blockinfile:
+    path: /boot/config.txt
+    marker: "# {mark} ANSIBLE enable the PPS on kernel level"
+    block: |
+      dtoverlay=pps-gpio,gpiopin=18
+    state: present
+
+- name: Deploy the default config for gpsd
+  template:
+    src: etc/default/gpsd.j2
+    dest: /etc/default/gpsd
+    owner: root
+    group: root
+
+- name: Enter "wake" for GPSD daemon
+  blockinfile:
+    path: /etc/rc.local
+    block: |
+      gpspipe -r -n 1 &
+    insertbefore: '(exit 0)$'
+
+- name: Check if the DHCP ntp file exists
+  stat: 
+    path: /etc/dhcp/dhclient-exit-hooks.d/ntp
+  register: register_dhcp_ntp
+
+- name: Copy the DHCP ntp file to new location
+  copy:
+    src: /etc/dhcp/dhclient-exit-hooks.d/ntp
+    dest: /etc/dhcp/dhclient-exit-hooks.d/xxxntp-orig
+    remote_src: True
+  when: register_dhcp_ntp.stat.exists|bool
+
+- name: Remove the old DHCP ntp file
+  file:
+    path: /etc/dhcp/dhclient-exit-hooks.d/ntp
+    state: absent
+  when: register_dhcp_ntp.stat.exists|bool
+
+- name: Check for nohz=off
+  shell: cat /boot/cmdline.txt | grep -c 'nohz=off' || true
+  register: pi_nohz_register
+
+- name: Add nohz=off on the end of the line
+  replace:
+    dest: /boot/cmdline.txt
+    regexp: '(\s+)$'
+    replace: ' nohz=off '
+  when: pi_nohz_register.stdout == "0"
+
+- name: Check for smsc95xx.turbo_mode
+  shell: cat /boot/cmdline.txt | grep -c 'smsc95xx.turbo_mode=N' || true
+  register: pi_smsc95xx_turbo_mode_register
+
+- name: Add smsc95xx.turbo_mode=N on the end of the line
+  replace:
+    dest: /boot/cmdline.txt
+    regexp: '(\s+)$'
+    replace: ' smsc95xx.turbo_mode=N '
+  when: pi_smsc95xx_turbo_mode_register.stdout == "0"
+
+- name: Include Chrony install
+  include_tasks: chrony.yml
+  when: timeserver_default_server == 'chrony'
+
+- name: Include NTPD install
+  include_tasks: ntpd.yml
+  when: timeserver_default_server == 'ntpd'
+
+- name: Include Telegraf plugins
+  include_tasks: telegraf.yml
+  when: timeserver_telegraf_plugins|bool
+
+- name: Include Raspberry PI i2c LCD
+  include_tasks: rplcd.yml
+  when: timeserver_rplcd_install|bool

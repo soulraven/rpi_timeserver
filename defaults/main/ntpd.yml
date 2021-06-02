@@ -1,0 +1,205 @@
+---
+
+# .. envvar:: ntp_default_version [[[
+#
+# Default version for ntp daemon
+ntp_default_version: 4.2.8p15
+# ]]]
+
+# .. envvar:: ntp_dist_name [[[
+#
+ntp_dist_name: "ntp-{{ ntp_default_version }}"
+# ]]]
+
+# .. envvar:: ntp_source_tarball [[[
+#
+ntp_source_tarball: "{{ ntp_dist_name }}.tar.gz"
+# ]]]
+
+# .. envvar:: ntp_url_path [[[
+#
+# URL patch for the latest ntp daemon
+ntp_url_path: "https://www.eecis.udel.edu/~ntp/ntp_spool/ntp4/ntp-4.2/{{ ntp_source_tarball }}"
+# ]]]
+
+# .. envvar:: ntp_build_dir [[[
+#
+# NTP build dir
+ntp_build_dir: /tmp
+# ]]]
+
+# .. envvar:: ntp_cleanup_build [[[
+#
+# NTP build dir
+ntp_cleanup_build: True
+# ]]]
+
+# .. envvar:: ntp_compiled_configure_flags [[[
+#
+# NTP build dir
+ntp_configure_flags: "--enable-all-clocks --enable-parse-clocks -enable-SHM --enable-debugging \
+--with-sntp=no --with-lineeditlibs=readline --without-ntpsnmpd --disable-local-libopts \
+--disable-dependency-tracking --enable-linuxcaps --enable-pps --enable-ATOM"
+# ]]]
+
+# .. envvar:: ntp_make_params [[[
+#
+ntp_make_params: "-j5"
+# ]]]
+
+# .. envvar:: ntp_config_driftfile [[[
+#
+ntp_config_driftfile: /var/lib/ntp/ntp.drift
+# ]]]
+
+# .. envvar:: ntp_config_driftfile [[[
+#
+ntp_config_leapfile: /usr/share/zoneinfo/leap-seconds.list
+# ]]]
+
+# .. envvar:: ntp_config_logfile [[[
+#
+ntp_config_logfile: /var/log/ntp.log
+# ]]]
+
+# .. envvar:: ntp_config_logfile [[[
+#
+ntp_pid_file_path: /var/run/ntpd.pid
+# ]]]
+
+# .. envvar:: ntp_config_logfile [[[
+#
+ntp_stats_file_path: /var/log/ntpstats/
+# ]]]
+
+# .. envvar:: ntp_local_clock [[[
+#
+ntp_local_clock: False
+# ]]]
+
+# .. envvar:: ntp_pps_kernel [[[
+# Enable the kernel pps mode
+# see: http://doc.ntp.org/4.2.8/drivers/driver22.html
+ntp_pps_kernel: True
+# ]]]
+
+# .. envvar:: ntp_pps_kernel_minpool [[[
+# 
+ntp_pps_kernel_minpool: 4
+# ]]]
+
+# .. envvar:: ntp_pps_kernel_maxpool [[[
+# 
+ntp_pps_kernel_maxpool: 4
+# ]]]
+
+# .. envvar:: ntp_pps_kernel_stratum [[[
+# Set the statum level of the pps kernel
+ntp_pps_kernel_stratum: 1
+# ]]]
+
+# .. envvar:: ntp_pps_kernel_refid [[[
+# Reperence id for pps kernel
+ntp_pps_kernel_refid: PPS0
+# ]]]
+
+# .. envvar:: ntp_pps_kernel_time1 [[[
+# 
+ntp_pps_kernel_time1: 0.0
+# ]]]
+
+# .. envvar:: ntp_gps_shm0 [[[
+# 
+ntp_gps_shm0: True
+# ]]]
+
+# .. envvar:: ntp_gps_shm0_stratum [[[
+# 
+ntp_gps_shm0_stratum: 1
+# ]]]
+
+# .. envvar:: ntp_gps_shm0_refid [[[
+# 
+ntp_gps_shm0_refid: SHM0
+# ]]]
+
+# .. envvar:: ntp_gps_shm0_time1 [[[
+# 
+ntp_gps_shm0_time1: 0.260
+# ]]]
+
+# .. envvar:: ntp_gps_shm0_minpool [[[
+# 
+ntp_gps_shm0_minpool: 4
+# ]]]
+
+# .. envvar:: ntp_gps_shm0_maxpool [[[
+# 
+ntp_gps_shm0_maxpool: 4
+# ]]]
+
+# .. envvar:: ntp_gps_shm2 [[[
+# 
+ntp_gps_shm2: True
+# ]]]
+
+# .. envvar:: ntp_gps_shm2_stratum [[[
+# 
+ntp_gps_shm2_stratum: 1
+# ]]]
+
+# .. envvar:: ntp_gps_shm2_refid [[[
+# 
+ntp_gps_shm2_refid: SPPS
+# ]]]
+
+# .. envvar:: ntp_gps_shm2_time1 [[[
+# 
+ntp_gps_shm2_time1: 0.300
+# ]]]
+
+# .. envvar:: ntp_local_users [[[
+# What local networks are permited to access the ntp server
+ntp_local_restriction: []
+# ]]]
+
+# .. envvar:: ntp_aditional_public_servers [[[
+# 
+ntp_aditional_public_servers: []
+# ]]]
+
+# .. envvar:: ntp_public_servers [[[
+# 
+ntp_public_servers: '{{ q("flattened", (ntp_base_public_servers
+                              + ntp_aditional_public_servers)) }}'
+# ]]]
+
+# .. envvar:: ntp_private_servers [[[
+# 
+ntp_private_servers: []
+# ]]]
+
+# .. envvar:: ntp_broadcast_network_list [[[
+# 
+ntp_broadcast_network_list: []
+# ]]]
+
+# .. envvar:: ntp_broadcastclient [[[
+# 
+ntp_broadcastclient: False
+# ]]]
+
+# .. envvar:: ntp_disable_auth [[[
+# 
+ntp_disable_auth: True
+# ]]]
+
+# .. envvar:: ntp_disable_monitor [[[
+# 
+ntp_disable_monitor: True
+# ]]]
+
+# .. envvar:: ntp_tos_mindist [[[
+#
+ntp_tos_mindist: 0.5
+# ]]]

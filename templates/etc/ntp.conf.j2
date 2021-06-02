@@ -1,0 +1,113 @@
+{{ ansible_managed | comment }}
+
+# For more information about this file, see the man pages
+# ntp.conf(5), ntp_acc(5), ntp_auth(5), ntp_clock(5), ntp_misc(5), ntp_mon(5).
+
+# Drift file to remember clock rate across restarts
+driftfile {{ ntp_config_driftfile }}
+
+leapfile {{ ntp_config_leapfile }}
+
+# Location of the log file
+logfile {{ ntp_config_logfile }}
+
+# Location of the pid file
+pidfile {{ ntp_pid_file_path }}
+
+# Enable this if you want statistics to be logged.
+statsdir {{ ntp_stats_file_path }}
+
+statistics loopstats peerstats clockstats
+filegen loopstats file loopstats type day enable
+filegen peerstats file peerstats type day enable
+filegen clockstats file clockstats type day enable
+
+{% if ntp_pps_kernel|bool %}
+# PPS Kernel mode
+server 127.127.22.0 minpoll {{ ntp_pps_kernel_minpool }} maxpoll {{ ntp_pps_kernel_maxpool }} true
+fudge 127.127.22.0 flag3 1 time1 {{ ntp_pps_kernel_time1 }} {% if ntp_pps_kernel_refid %}refid {{ ntp_pps_kernel_refid }} {% endif %} {% if ntp_pps_kernel_stratum %}stratum {{ ntp_pps_kernel_stratum }} {% endif %}
+{% endif %}
+
+{% if ntp_gps_shm0|bool %}
+# GPS Serial data Reference
+server 127.127.28.0 minpoll {{ ntp_gps_shm0_minpool }} maxpoll {{ ntp_gps_shm0_maxpool }} iburst prefer
+fudge 127.127.28.0 flag1 1 time1 {{ ntp_gps_shm0_time1 }} {% if ntp_gps_shm0_refid %}refid {{ ntp_gps_shm0_refid }} {% endif %} {% if ntp_gps_shm0_stratum %}stratum {{ ntp_gps_shm0_stratum }} {% endif %}
+{% endif %}
+
+{% if ntp_gps_shm2|bool %}
+# Shared Memory 2 source
+server 127.127.28.2 minpoll 4 maxpoll 4
+fudge 127.127.28.2 flag1 1 time1 {{ ntp_gps_shm2_time1 }} {% if ntp_gps_shm2_refid %}refid {{ ntp_gps_shm2_refid }} {% endif %}{% if ntp_gps_shm2_stratum %}stratum {{ ntp_gps_shm2_stratum }}{% endif %}
+{% endif %}
+
+{% if ntp_local_clock|bool %}
+# local clock as fallback resource
+server 127.127.1.0 # local clock
+fudge 127.127.1.0 stratum 12
+{% endif %}
+
+# By default, exchange time with everybody, but don't allow configuration.
+restrict -4 default kod notrap nomodify nopeer noquery limited
+restrict 127.0.0.1 mask 255.255.255.255
+
+restrict -6 default kod notrap nomodify nopeer noquery limited
+restrict ::1
+
+{% if ntp_local_restriction %}
+# Local users may interrogate the ntp server more closely.
+{% for local_restrict in ntp_local_restriction %}
+restrict {{ local_restrict.ip }} mask {{ local_restrict.mask }} {{ local_restrict.options|d([]) | join(' ') }}
+{% endfor %}
+{% endif %}
+
+restrict source notrap nomodify noquery
+
+{% if ntp_private_servers %}
+# Use private servers from the local networks
+{% for item in ntp_private_servers %}
+{% if item.ip|d() %}
+server {{ item.ip }} {{ item.options|d([]) | join(' ') }}
+{% endif %}
+{% endfor %}
+{% endif %}
+
+{% if timeserver_base_public_servers %}
+# Use public servers from the pool.ntp.org project.
+# Please consider joining the pool (http://www.pool.ntp.org/join.html).
+{% for item in timeserver_base_public_servers %}
+pool {{ item }}
+{% endfor %}
+{% endif %}
+
+{% if ntp_broadcast_network_list %}
+# If you want to provide time to your local subnet, change the next line.
+{% for brd_network in ntp_broadcast_network_list %}
+broadcast {{ brd_network }}
+{% endfor %}
+{% endif %}
+
+{% if ntp_broadcastclient %}
+# If you want to listen to time broadcasts on your local subnet, de-comment the
+# next lines. Please do this only if you trust everybody on the network!
+broadcastclient
+{% endif %}
+
+{% if ntp_disable_auth or ntp_broadcastclient %}
+#Disable the server to synchronize with unconfigured peers only if the peer has been correctly authenticated using a trusted key and key identifier.
+# The default for this flag is enable.
+disable auth
+{% endif %}
+
+{% if ntp_disable_monitor %}
+# Disable the monitoring facility to prevent amplification attacks using ntpdc
+# monlist command when default restrict does not include the noquery flag. See
+# CVE-2013-5211 for more details.
+# Note: Monitoring will not be disabled with the limited restriction flag.
+disable monitor
+{% endif %}
+
+# Fix False tickers
+# Specify the minimum distance used by the selection and anticlockhop algorithm.
+# Larger values increase the tolerance for outliers; smaller values increase the selectivity.
+# The default is .001 s. In some cases, such as reference clocks with high jitter and a PPS signal, it is useful to increase the value to insure the intersection interval is always nonempty.
+tos mindist {{ ntp_tos_mindist|d(0.001) }}

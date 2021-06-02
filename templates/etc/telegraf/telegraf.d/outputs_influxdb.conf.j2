@@ -1,0 +1,8 @@
+{{ ansible_managed | comment }}
+
+[[outputs.influxdb]]
+  urls = ["http://{{ timeserver_telegraf_influxdb_host }}:{{ timeserver_telegraf_influxdb_port }}"]
+
+  database = "{{ timeserver_telegraf_influxdb_database }}"
+
+  namepass = {{ timeserver_telegraf_influxdb_namepass | to_json }}

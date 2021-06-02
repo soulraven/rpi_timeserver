@@ -1,0 +1,290 @@
+---
+
+# .. envvar:: chrony__base_packages [[[
+#
+chrony__base_packages:
+  - chrony
+# ]]]
+
+# .. envvar:: chrony_include [[[
+#
+chrony_include: /etc/chrony/chrony.d/*.conf
+# ]]]
+
+# .. envvar:: chrony_keyfile_path [[[
+#
+chrony_keyfile_path: /etc/chrony/chrony.keys
+# ]]]
+
+# .. envvar:: chrony_driftfile_path [[[
+#
+chrony_driftfile_path: /var/lib/chrony/chrony.drift
+# ]]]
+
+# .. envvar:: chrony_logdir_path [[[
+#
+chrony_logdir_path: /var/log/chrony
+# ]]]
+
+# .. envvar:: chrony_log_options [[[
+#
+chrony_log_options: ''
+# ]]]
+
+# .. envvar:: chrony_log_directive [[[
+#
+chrony_log_directive:
+  - rawmeasurements
+  - measurements
+  - statistics
+  - tracking
+  - refclocks
+  - tempcomp
+# ]]]
+
+# .. envvar:: chrony_log_banner [[[
+#
+# logbanner 32: the default
+# logbanner -1: for one every restart only
+# logbanner  0: to disable it entirely
+chrony_log_banner: 0
+# ]]]
+
+# .. envvar:: chrony_log_change [[[
+#
+chrony_log_change: 0.1
+# ]]]
+
+
+# .. envvar:: chrony_allow [[[
+#
+chrony_allow: []
+# ]]]
+
+# .. envvar:: chrony_allow [[[
+#
+chrony_local:
+  - stratum 1
+  - orphan
+# ]]]
+
+# .. envvar:: chrony_lock_all [[[
+#
+chrony_lock_all: True
+# ]]]
+
+# .. envvar:: chrony_lock_all [[[
+#
+chrony_pid_file: /run/chronyd.pid
+# ]]]
+
+# .. envvar:: chrony_maxupdateskew [[[
+#
+chrony_maxupdateskew: 100.0
+# ]]]
+
+# .. envvar:: chrony_hwclockfile [[[
+#
+chrony_hwclockfile: /etc/adjtime
+# ]]]
+
+# .. envvar:: chrony_rtc_settings [[[
+#
+chrony_rtc_settings:
+  - rtcsync
+# ]]]
+
+# .. envvar:: chrony_hwtimestamp [[[
+#
+chrony_hwtimestamp:
+  - '*'
+# ]]]
+
+# .. envvar:: chrony_makestep [[[
+#
+chrony_makestep: '0.2 -1'
+# ]]]
+
+# .. envvar:: chrony_private_servers [[[
+#
+chrony_private_servers: []
+# ]]]
+
+# .. envvar:: chrony_refclock_shm0_state [[[
+# NMEA SHM 0 memory share
+chrony_refclock_shm0_state: True
+# ]]]
+
+# .. envvar:: chrony_refclock_shm0_description [[[
+# NMEA SHM 0 memory share
+chrony_refclock_shm0_description: 'SHM(0), gpsd: NMEA data from shared memory provided by gpsd'
+# ]]]
+
+# .. envvar:: chrony_refclock_shm0_refclock [[[
+# 
+chrony_refclock_shm0_refclock: 'SHM 0'
+# ]]]
+
+# .. envvar:: chrony_refclock_shm0_refid [[[
+# 
+chrony_refclock_shm0_refid: 'GPS0'
+# ]]]
+
+# .. envvar:: chrony_refclock_shm0_options [[[
+# 
+chrony_refclock_shm0_options:
+  - 'poll 3'
+  - 'precision 1e-1'
+  - 'trust'
+# ]]]
+
+# .. envvar:: chrony_refclock_shm0_options__extra [[[
+# 
+chrony_refclock_shm0_options__extra: []
+# ]]]
+
+# .. envvar:: chrony_refclock_shm1_state [[[
+# PPS SHM 0 memory share
+chrony_refclock_shm1_state: True
+# ]]]
+
+# .. envvar:: chrony_refclock_shm1_description [[[
+chrony_refclock_shm1_description: 'SHM(1), gpsd: PPS0 data from shared memory provided by gpsd'
+# ]]]
+
+# .. envvar:: chrony_refclock_shm1_refclock [[[
+# 
+chrony_refclock_shm1_refclock: 'SHM 1'
+# ]]]
+
+# .. envvar:: chrony_refclock_shm1_refid [[[
+# 
+chrony_refclock_shm1_refid: 'PPM1'
+# ]]]
+
+# .. envvar:: chrony_refclock_shm1_options [[[
+# 
+chrony_refclock_shm1_options:
+  - 'poll 3'
+  - 'precision 1e-7'
+  - 'lock {{ chrony_refclock_shm0_refid }}'
+  - 'trust'
+# ]]]
+
+# .. envvar:: chrony_refclock_shm1_options__extra [[[
+# 
+chrony_refclock_shm1_options__extra: []
+# ]]]
+
+# .. envvar:: chrony_refclock_pps0_state [[[
+# PPS /dev/pps0 
+chrony_refclock_pps0_state: True
+# ]]]
+
+# .. envvar:: chrony_refclock_pps0_description [[[
+chrony_refclock_pps0_description: 'PPS: /dev/pps0: Kernel-mode PPS ref-clock for the precise seconds'
+# ]]]
+
+# .. envvar:: chrony_refclock_pps0_refclock [[[
+# 
+chrony_refclock_pps0_refclock: 'PPS /dev/pps0'
+# ]]]
+
+# .. envvar:: chrony_refclock_pps0_refid [[[
+# 
+chrony_refclock_pps0_refid: 'PPS0'
+# ]]]
+
+# .. envvar:: chrony_refclock_pps0_options [[[
+# 
+chrony_refclock_pps0_options:
+  - 'poll 3'
+  - 'precision 1e-7'
+  - 'lock {{ chrony_refclock_shm0_refid }}'
+  - 'trust'
+# ]]]
+
+# .. envvar:: chrony_refclock_pps0_options__extra [[[
+# 
+chrony_refclock_pps0_options__extra: []
+# ]]]
+
+# .. envvar:: chrony_refclock_pst0_state [[[
+# PPS from gpsd socket /var/run/chrony.pps0.sock
+chrony_refclock_pst0_state: False
+# ]]]
+
+# .. envvar:: chrony_refclock_pst0_description [[[
+chrony_refclock_pst0_description: 'SOCK, gpsd: PPS0 data from socket provided by gpsd'
+# ]]]
+
+# .. envvar:: chrony_refclock_pst0_refclock [[[
+# 
+chrony_refclock_pst0_refclock: 'SOCK /var/run/chrony.pps0.sock'
+# ]]]
+
+# .. envvar:: chrony_refclock_pst0_refid [[[
+# 
+chrony_refclock_pst0_refid: 'PST0'
+# ]]]
+
+# .. envvar:: chrony_refclock_pst0_options [[[
+# 
+chrony_refclock_pst0_options:
+  - 'poll 3'
+  - 'precision 1e-7'
+  - 'lock {{ chrony_refclock_shm0_refid }}'
+  - 'trust'
+# ]]]
+
+# .. envvar:: chrony_refclock_pst0_options__extra [[[
+# 
+chrony_refclock_pst0_options__extra: []
+# ]]]
+
+# .. envvar:: chrony_default_refclocks [[[
+#
+chrony_default_refclocks:
+  - state: "{{ chrony_refclock_shm0_state|bool }}"
+    description: "{{ chrony_refclock_shm0_description }}"
+    refclock: "{{ chrony_refclock_shm0_refclock }}"
+    refid: "{{ chrony_refclock_shm0_refid }}"
+    options: "{{ q('flattened', (chrony_refclock_shm0_options
+                              + chrony_refclock_shm0_options__extra)) }}"
+      
+  - state: "{{ chrony_refclock_shm1_state }}"
+    description: "{{ chrony_refclock_shm1_description }}"
+    refclock: "{{ chrony_refclock_shm1_refclock }}"
+    refid: "{{ chrony_refclock_shm1_refid }}"
+    options: "{{ q('flattened', (chrony_refclock_shm1_options
+                              + chrony_refclock_shm1_options__extra)) }}"
+      
+  - state: "{{ chrony_refclock_pps0_state }}"
+    description: "{{ chrony_refclock_pps0_description }}"
+    refclock: "{{ chrony_refclock_pps0_refclock }}"
+    refid: "{{ chrony_refclock_pps0_refid }}"
+    options: "{{ q('flattened', (chrony_refclock_pps0_options
+                              + chrony_refclock_pps0_options__extra)) }}"
+  - state: "{{ chrony_refclock_pst0_state }}"
+    description: "{{ chrony_refclock_pst0_description }}"
+    refclock: "{{ chrony_refclock_pst0_refclock }}"
+    refid: "{{ chrony_refclock_pst0_refid }}"
+    options: "{{ q('flattened', (chrony_refclock_pst0_options
+                              + chrony_refclock_pst0_options__extra)) }}"
+# ]]]
+
+# .. envvar:: chrony_refclocks__extra [[[
+#
+chrony_refclocks__extra: []
+# ]]]
+
+# .. envvar:: chrony_refclocks [[[
+#
+chrony_refclocks: "{{ q('flattened', (chrony_default_refclocks
+                              + chrony_refclocks__extra)) }}"
+# ]]]
+
+# .. envvar:: chrony_refclocks [[[
+#
+chrony_config_extra_options: {}
+# ]]]

@@ -1,0 +1,7 @@
+{{ ansible_managed | comment }}
+
+[[inputs.ntpq]]
+  ## If false, add -n for ntpq command. Can reduce metric gather times.
+  dns_lookup = true
+  [inputs.ntpq.tags]
+    input = "ntpq"
