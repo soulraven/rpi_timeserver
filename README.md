@@ -27,12 +27,16 @@ Including an example of how to use your role (for instance, with variables passe
       roles:
          - { role: username.rolename, x: 42 }
 
-License
--------
+### 🌍 Contributions
 
-BSD
+Contributions of all forms are welcome :)
 
-Author Information
-------------------
+## 🗒 License
 
-An optional section for the role authors to include contact information, or a website (HTML is not allowed).
+This Ansible role is licensed under the GNU General Public License, version 3 (GPLv3).
+
+## 👀 Author
+
+**Zaharia Constantin**
+
+[View my GitHub profile 💡](https://github.com/soulraven)
