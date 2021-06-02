@@ -1,0 +1,16 @@
+---
+
+- name: Raspberry PI Time Server
+  collections: [ 'debops.debops', 'debops.roles01',
+                 'debops.roles02', 'debops.roles03' ]
+  hosts: [ 'debops_ntp_servers' ]
+  become: True
+  environment: '{{ inventory__environment | d({})
+                   | combine(inventory__group_environment | d({}))
+                   | combine(inventory__host_environment  | d({})) }}'
+  remote_user: pi
+  gather_facts: True
+
+  roles:
+    - role: raspberryPi_timeserver
+      tags: [ 'role::raspberryPi_timeserver', 'skip:raspberryPi_timeserver' ]
