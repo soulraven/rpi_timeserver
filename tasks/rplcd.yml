@@ -2,7 +2,7 @@
 
 - name: Create Raspberry PI LCD user
   user:
-    name: rplcd
+    name: "{{ rplcd_user }}"
     comment: Rasberry PI LCD user
     state: present
     groups: i2c
@@ -10,32 +10,32 @@
 
 - name: Add user "rplcd" to video group
   user:
-    name: rplcd
+    name: "{{ rplcd_user }}"
     groups: video
     append: yes
 
 - name: Get the repository for RaspberryPI LCD
   git:
-    repo: "{{ timeserver_rplcd_git_repo }}"
-    dest: /home/rplcd/rplcd_timeserver
+    repo: "{{ rplcd_git_repo }}"
+    dest: "{{ rplcd_install_dest }}"
     force: yes
 
 - name: Change permisions for repository
   file:
-    path: /home/rplcd/rplcd_timeserver
-    owner: rplcd
-    group: rplcd
+    path: "{{ rplcd_install_dest }}"
+    owner: "{{ rplcd_user }}"
+    group: "{{ rplcd_group }}"
     recurse: yes
 
 - name: Deploy PIP requirements.txt
   pip:
-    requirements: /home/rplcd/rplcd_timeserver/requirements.txt
-    chdir: /home/rplcd/rplcd_timeserver
+    requirements: "{{ rplcd_install_dest }}/requirements.txt"
+    chdir: "{{ rplcd_install_dest }}"
     state: present
 
 - name: Deploy the systemd for RaspberryPI LCD
   file:
-    src: /home/rplcd/rplcd_timeserver/rplcd.service
+    src: "{{ rplcd_install_dest }}/rplcd.service"
     dest: /lib/systemd/system/rplcd.service
     state: link
 

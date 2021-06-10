@@ -1,0 +1,58 @@
+#  -*- coding: utf-8 -*-
+#              Copyright (C) 2018-2021 ProGeek
+#
+#  This program is free software: you can redistribute it and/or modify
+#  it under the terms of the GNU General Public License as published by
+#  the Free Software Foundation, either version 3 of the License, or
+#  (at your option) any later version.
+#
+#  This program is distributed in the hope that it will be useful,
+#  but WITHOUT ANY WARRANTY; without even the implied warranty of
+#  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+#  GNU General Public License for more details.
+#
+#  You should have received a copy of the GNU General Public License
+#  along with this program.  If not, see <http://www.gnu.org/licenses/>.
+
+DEBUG = {{ gpsd_influxdb_debug }}
+
+INFLUXDB_20v: bool = {{ gpsd_influxdb_version20 }}
+
+INFLUXDB_HOST: str = '{{ gpsd_influxdb_host }}'
+INFLUXDB_PORT: int = {{ gpsd_influxdb_port }}
+
+INFLUXDB_USER: str = '{{ gpsd_influxdb_user }}'
+INFLUXDB_PASSWORD: str = '{{ gpsd_influxdb_password }}'
+
+INFLUXDB_TOKEN: str = '' if INFLUXDB_20v else f'{INFLUXDB_USER}:{INFLUXDB_PASSWORD}' \
+    if all([INFLUXDB_USER, INFLUXDB_PASSWORD]) else ''
+
+INFLUXDB_ORGANIZATION: str = '{{ gpsd_influxdb_organization }}'
+
+INFLUXDB_DATABASE: str = '{{ gpsd_influxdb_database }}'
+INFLUXDB_RETENTION_POLICY: str = '{{ gpsd_influxdb_retention_policy }}'
+INFLUXDB_MEASURMENT: str = '{{ gpsd_influxdb_measurment }}'
+
+INFLUXDB_BUCKET: str = '' if INFLUXDB_20v else f'{INFLUXDB_DATABASE}/{INFLUXDB_RETENTION_POLICY}'
+
+INFLUXDB_SSL: bool = {{ gpsd_influxdb_ssl }}
+INFLUXDB_CERT_PATH: str = '{{ gpsd_influxdb_cert_path }}'
+
+INFLUXDB_URL: str = '{}://{}:{}'.format('https' if INFLUXDB_SSL else 'http', INFLUXDB_HOST, INFLUXDB_PORT)
+
+#############################
+# Global settings           #
+#############################
+
+# update interval for each push to influxDB
+SCHEDULE_UPDATE_INTERVAL: int = {{ gpsd_influxdb_update_interval }}
+
+###########
+# LOGGING #
+###########
+
+# The callable to use to configure logging
+LOGGING_CONFIG = 'logging.config.dictConfig'
+
+# Custom logging configuration.
+LOGGING = {}

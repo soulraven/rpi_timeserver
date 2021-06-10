@@ -1,0 +1,23 @@
+---
+
+# .. envvar:: rplcd_git_repo [[[
+#
+# Github repository url for RasberryPI LCD
+rplcd_git_repo: https://github.com/soulraven/rplcd_timeserver
+# ]]]
+
+# .. envvar:: rplcd_git_repo [[[
+#
+# Github repository url for RasberryPI LCD
+rplcd_install_dest: /home/rplcd/rplcd_timeserver
+# ]]]
+
+# .. envvar:: rplcd_user [[[
+#
+rplcd_user: rplcd
+# ]]]
+
+# .. envvar:: rplcd_group [[[
+#
+rplcd_group: rplcd
+# ]]]

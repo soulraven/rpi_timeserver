@@ -1,0 +1,54 @@
+---
+
+- name: Create GPSD to Influxdb pusher user
+  user:
+    name: "{{ gpsd_influxdb_system_user }}"
+    comment: GPSD to Influxdb pusher
+    state: present
+    shell: /bin/bash
+
+- name: Get the repository for GPSD Influxdb pusher
+  git:
+    repo: "{{ gpsd_influxdb_git_repo }}"
+    dest: "{{ gpsd_influxdb_git_dest }}"
+    force: yes
+
+- name: Change permisions for repository
+  file:
+    path: "{{ gpsd_influxdb_git_dest }}"
+    owner: "{{ gpsd_influxdb_system_user }}"
+    group: "{{ gpsd_influxdb_system_group }}"
+    recurse: yes
+
+- name: Deploy PIP requirements.txt
+  pip:
+    requirements: "{{ gpsd_influxdb_git_dest }}/requirements.txt"
+    chdir: "{{ gpsd_influxdb_git_dest }}"
+    state: present
+
+- name: Deploy the template for settings.py file
+  template:
+    src: opt/gpsd_influxdb/settings.py.j2
+    dest: "{{ gpsd_influxdb_git_dest }}/gpsd_influxdb/settings.py"
+    owner: "{{ gpsd_influxdb_system_user }}"
+    group: "{{ gpsd_influxdb_system_group }}"
+
+- name: Create log folder if not exists already
+  file:
+    path: "{{ gpsd_influxdb_git_dest }}/log"
+    owner: "{{ gpsd_influxdb_system_user }}"
+    group: "{{ gpsd_influxdb_system_group }}"
+    state: directory
+
+- name: Deploy the systemd for RaspberryPI LCD
+  file:
+    src: "{{ gpsd_influxdb_git_dest }}/gpsd_influxdb.service"
+    dest: /lib/systemd/system/gpsd_influxdb.service
+    state: link
+
+- name: Reload the systemd
+  systemd:
+    name: gpsd_influxdb
+    daemon_reload: yes
+    enabled: yes
+    state: restarted

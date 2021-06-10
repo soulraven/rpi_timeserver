@@ -1,0 +1,91 @@
+---
+# .. vim: foldmarker=[[[,]]]:foldmethod=marker
+
+# .. envvar:: gpsd_influxdb_git_repo [[[
+#
+gpsd_influxdb_git_repo: https://github.com/soulraven/gpsd_influxdb.git
+# ]]]
+
+# .. envvar:: gpsd_influxdb_git_dest [[[
+#
+gpsd_influxdb_git_dest: /opt/gpsd_influxdb
+# ]]]
+
+# .. envvar:: gpsd_influxdb_system_user [[[
+#
+gpsd_influxdb_system_user: gpsd_influxdb
+# ]]]
+
+# .. envvar:: gpsd_influxdb_system_group [[[
+#
+gpsd_influxdb_system_group: gpsd_influxdb
+# ]]]
+
+# .. envvar:: gpsd_influxdb_debug [[[
+#
+gpsd_influxdb_debug: False
+# ]]]
+
+# .. envvar:: gpsd_influxdb_version20 [[[
+#
+gpsd_influxdb_version20: False
+# ]]]
+
+# .. envvar:: gpsd_influxdb_host [[[
+#
+gpsd_influxdb_host: localhost
+# ]]]
+
+# .. envvar:: gpsd_influxdb_port [[[
+#
+gpsd_influxdb_port: 8086
+# ]]]
+
+# .. envvar:: gpsd_influxdb_user [[[
+#
+gpsd_influxdb_user: ''
+# ]]]
+
+# .. envvar:: gpsd_influxdb_password [[[
+#
+gpsd_influxdb_password: ''
+# ]]]
+
+# .. envvar:: gpsd_influxdb_organization [[[
+#
+gpsd_influxdb_organization: '-'
+# ]]]
+
+# .. envvar:: gpsd_influxdb_database [[[
+#
+gpsd_influxdb_database: 'influxdb'
+# ]]]
+
+# .. envvar:: gpsd_influxdb_retention_policy [[[
+#
+gpsd_influxdb_retention_policy: 'autogen'
+# ]]]
+
+# .. envvar:: gpsd_influxdb_measurment [[[
+#
+gpsd_influxdb_measurment: 'gpsd-python'
+# ]]]
+
+# .. envvar:: gpsd_influxdb_ssl [[[
+#
+gpsd_influxdb_ssl: False
+# ]]]
+
+# .. envvar:: gpsd_influxdb_cert_path [[[
+#
+gpsd_influxdb_cert_path: ''
+# ]]]
+
+# .. envvar:: gpsd_influxdb_update_interval [[[
+# Update of pushing data to Influxdb
+# update time is in seconds
+# default: 30 sec
+gpsd_influxdb_update_interval: 30
+# ]]]
+
+# ]]]

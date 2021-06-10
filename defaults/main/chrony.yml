@@ -133,9 +133,12 @@ chrony_refclock_shm0_refid: 'GPS0'
 # .. envvar:: chrony_refclock_shm0_options [[[
 # 
 chrony_refclock_shm0_options:
-  - 'poll 3'
+  - 'poll 4'
   - 'precision 1e-1'
   - 'trust'
+  - 'noselect'
+  - 'offset 0.05'
+  - 'delay 0.5'
 # ]]]
 
 # .. envvar:: chrony_refclock_shm0_options__extra [[[
@@ -145,7 +148,7 @@ chrony_refclock_shm0_options__extra: []
 
 # .. envvar:: chrony_refclock_shm1_state [[[
 # PPS SHM 0 memory share
-chrony_refclock_shm1_state: True
+chrony_refclock_shm1_state: False
 # ]]]
 
 # .. envvar:: chrony_refclock_shm1_description [[[
@@ -159,16 +162,17 @@ chrony_refclock_shm1_refclock: 'SHM 1'
 
 # .. envvar:: chrony_refclock_shm1_refid [[[
 # 
-chrony_refclock_shm1_refid: 'PPM1'
+chrony_refclock_shm1_refid: 'SHM1'
 # ]]]
 
 # .. envvar:: chrony_refclock_shm1_options [[[
 # 
 chrony_refclock_shm1_options:
-  - 'poll 3'
-  - 'precision 1e-7'
+  - 'poll 4'
+  - 'precision 1e-3'
   - 'lock {{ chrony_refclock_shm0_refid }}'
   - 'trust'
+  - 'noselect'
 # ]]]
 
 # .. envvar:: chrony_refclock_shm1_options__extra [[[
@@ -182,12 +186,18 @@ chrony_refclock_pps0_state: True
 # ]]]
 
 # .. envvar:: chrony_refclock_pps0_description [[[
-chrony_refclock_pps0_description: 'PPS: /dev/pps0: Kernel-mode PPS ref-clock for the precise seconds'
+chrony_refclock_pps0_description: "PPS: /dev/pps0: Kernel-mode PPS ref-clock for the precise seconds"
+# ]]]
+
+# .. envvar:: chrony_refclock_pps0_clear [[[
+# By default, the PPS refclock uses assert events (rising edge) for synchronization.
+# With this option, it will use clear events (falling edge) instead.
+chrony_refclock_pps0_clear: False
 # ]]]
 
 # .. envvar:: chrony_refclock_pps0_refclock [[[
 # 
-chrony_refclock_pps0_refclock: 'PPS /dev/pps0'
+chrony_refclock_pps0_refclock: "PPS /dev/pps0{{ ':clear' if chrony_refclock_pps0_clear }}"
 # ]]]
 
 # .. envvar:: chrony_refclock_pps0_refid [[[
@@ -198,10 +208,11 @@ chrony_refclock_pps0_refid: 'PPS0'
 # .. envvar:: chrony_refclock_pps0_options [[[
 # 
 chrony_refclock_pps0_options:
-  - 'poll 3'
+  - 'poll 4'
   - 'precision 1e-7'
   - 'lock {{ chrony_refclock_shm0_refid }}'
   - 'trust'
+  - 'prefer'
 # ]]]
 
 # .. envvar:: chrony_refclock_pps0_options__extra [[[

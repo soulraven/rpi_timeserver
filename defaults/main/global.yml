@@ -30,10 +30,20 @@ timeserver__packages: []
 timeserver_default_server: chrony
 # ]]]
 
-# .. envvar:: timeserver_telegraf_plugins [[[
+# NTP server area configuration (leave empty for 'Worldwide').
+# See: http://support.ntp.org/bin/view/Servers/NTPPoolServers
+timeserver_area: 'ro'
+
+# .. envvar:: ntp_base_public_servers [[[
+# 
+timeserver_base_public_pools:
+  - "{{ timeserver_area if timeserver_area else '' }}.pool.ntp.org iburst minpoll 4 maxpoll 4"
+# ]]]
+
+# .. envvar:: timeserver_telegraf_install [[[
 #
 # Enable the Telegraf plugin deploy for specific time server
-timeserver_telegraf_plugins: True
+timeserver_telegraf_install: True
 # ]]]
 
 # .. envvar:: timeserver_telegraf_influxdb_host [[[
@@ -61,27 +71,13 @@ timeserver_telegraf_influxdb_namepass:
   - chrony
 # ]]]
 
+# .. envvar:: gpsd_influxdb_install [[[
+# Install the repository for gpsd pusher to influxdb stats
+gpsd_influxdb_install: True
+# ]]]
+
 # .. envvar:: timeserver_rplcd_install [[[
 #
 # Enable the raspberry pi LCD
 timeserver_rplcd_install: True
-# ]]]
-
-# .. envvar:: timeserver_rplcd_git_repo [[[
-#
-# Github repository url for RasberryPI LCD
-timeserver_rplcd_git_repo: https://github.com/soulraven/rplcd_timeserver
-# ]]]
-
-# NTP server area configuration (leave empty for 'Worldwide').
-# See: http://support.ntp.org/bin/view/Servers/NTPPoolServers
-timeserver_area: 'ro'
-
-# .. envvar:: ntp_base_public_servers [[[
-# 
-timeserver_base_public_servers:
-  - "0{{ '.' + timeserver_area if timeserver_area else '' }}.pool.ntp.org iburst minpoll 4  maxpoll 4"
-  - "1{{ '.' + timeserver_area if timeserver_area else '' }}.pool.ntp.org iburst minpoll 4  maxpoll 4"
-  - "2{{ '.' + timeserver_area if timeserver_area else '' }}.pool.ntp.org iburst minpoll 4  maxpoll 4"
-  - "3{{ '.' + timeserver_area if timeserver_area else '' }}.pool.ntp.org iburst minpoll 4  maxpoll 4"
 # ]]]
