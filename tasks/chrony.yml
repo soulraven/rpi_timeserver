@@ -11,6 +11,7 @@
 - debug:
     msg: "{{ ntpd_service_register.msg }}"
   when: ntp_service_register is failed
+  ignore_errors: true
 
 - name: Install Chrony required packages
   package:

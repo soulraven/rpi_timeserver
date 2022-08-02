@@ -27,11 +27,11 @@
     group: "{{ rplcd_group }}"
     recurse: yes
 
-- name: Deploy PIP requirements.txt
-  pip:
-    requirements: "{{ rplcd_install_dest }}/requirements.txt"
-    chdir: "{{ rplcd_install_dest }}"
-    state: present
+# - name: Deploy PIP requirements.txt
+#   pip:
+#     requirements: "{{ rplcd_install_dest }}/requirements.txt"
+#     chdir: "{{ rplcd_install_dest }}"
+#     state: present
 
 - name: Deploy the systemd for RaspberryPI LCD
   file:

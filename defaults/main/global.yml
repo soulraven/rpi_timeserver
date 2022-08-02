@@ -8,9 +8,13 @@ timeserver__base_packages:
   - pps-tools
   - gpsd
   - gpsd-clients
-  - python-gps
+  - python3-gps
+  - python3-apt
   - libcap-dev
   - libssl-dev
+  - libglib2.0-dev
+  - libgirepository1.0-dev
+  - libcairo2-dev
   - ntpstat
   - git
   - python3-pip
