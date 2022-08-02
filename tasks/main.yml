@@ -13,7 +13,7 @@
     path: /boot/config.txt
     marker: "# {mark} ANSIBLE enable the PPS on kernel level"
     block: |
-      dtoverlay=pps-gpio,gpiopin=18
+      dtoverlay=pps-gpio,gpiopin=18,capture_clear
     state: present
 
 - name: Deploy the default config for gpsd
